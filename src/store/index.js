@@ -23,7 +23,10 @@ export default function(/* { ssrContext } */) {
     state: {
       isBusy: {
         app: false
-      }
+      },
+
+      // Firebase user data
+      user: null
     },
 
     mutations: {
