@@ -9,6 +9,7 @@ import { pick } from "lodash";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from "../firebase.config.json";
+import { mapState } from "vuex";
 
 firebase.initializeApp(firebaseConfig);
 const provider = new firebase.auth.GoogleAuthProvider();
@@ -16,12 +17,15 @@ const provider = new firebase.auth.GoogleAuthProvider();
 export default {
   name: "App",
 
+  computed: mapState(["user"]),
+
   /**
    * Handle autologin/out
    */
   mounted() {
     window.app = this;
     this.$root.$on("firebaseLogin", this.firebaseLogin);
+    this.$root.$on("firebaseLogout", this.firebaseLogout);
     firebase.auth().onAuthStateChanged(user => this.onFirebaseAuthChange(user));
   },
 
@@ -50,6 +54,24 @@ export default {
     },
 
     /**
+     * Logout
+     */
+    firebaseLogout() {
+      firebase
+        .auth()
+        .signOut()
+        .catch(error => {
+          let errorCode = error.code;
+          let errorMessage = error.message;
+
+          this.$q.notify({
+            message: `{${errorCode}} Error signing in: ${errorMessage}`,
+            color: "negative"
+          });
+        });
+    },
+
+    /**
      * Handle login and auto
      */
     onFirebaseAuthChange(user) {
@@ -65,10 +87,13 @@ export default {
           color: "positive"
         });
       } else {
-        this.$q.notify({
-          message: `You have been logged out`,
-          color: "positive"
-        });
+        if (this.user.uid) {
+          this.$q.notify({
+            message: `You have been logged out`,
+            color: "positive"
+          });
+        }
+        this.$store.commit("set", ["user", {}]);
       }
     }
   }

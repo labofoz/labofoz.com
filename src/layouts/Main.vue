@@ -8,7 +8,11 @@ q-layout(view='lHh Lpr lFf')
       q-toolbar-title
         span Lab of Oz
         small(style='font-size: 12px; margin-left: 10px;') v{{ pkg.version }}
-      q-btn(color='secondary' @click='isVisible.login = true') Login
+      q-btn(v-if='!user.uid' color='secondary' @click='isVisible.login = true') Login
+      q-btn(v-else color='secondary' @click='firebaseLogout')
+        q-avatar.q-mr-sm(size=20)
+          img(:src='user.photoURL')
+        | Logout
   
   //- Sidebar
   q-drawer(v-model='isVisible.sidebar' bordered content-class='bg-grey-2')
@@ -45,7 +49,7 @@ import { mapState } from "vuex";
 export default {
   name: "Main",
 
-  computed: mapState(["isBusy"]),
+  computed: mapState(["isBusy", "user"]),
 
   data() {
     return {
@@ -64,6 +68,9 @@ export default {
   methods: {
     firebaseLogin() {
       this.$root.$emit("firebaseLogin");
+    },
+    firebaseLogout() {
+      this.$root.$emit("firebaseLogout");
     }
   }
 };

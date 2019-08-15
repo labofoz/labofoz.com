@@ -26,7 +26,7 @@ export default function(/* { ssrContext } */) {
       },
 
       // Firebase user data
-      user: null
+      user: {}
     },
 
     mutations: {
