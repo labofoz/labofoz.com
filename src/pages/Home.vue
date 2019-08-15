@@ -1,0 +1,30 @@
+<template lang="pug">
+q-page.q-pa-md
+  .container
+    .flex.row.q-col-gutter-lg.items-center(style='margin-top: 100px')
+      .col-xs-12.col-sm-6
+        .text-center
+          img(style='margin-top: -100px' src='~/src/statics/favicon.png')
+        h1.text-h4.text-center Hi there I'm Oz Ramos 👋
+        p.text-h5 I like <strong>JavaScript</strong> and <strong>Computer Vision</strong> and I'm using this site to share my Projects, Notes, Models, Dailies, and more!
+      .col-xs-12.col-sm-6
+        iframe(height="315" src="https://www.youtube.com/embed/5z9nPtM-_l4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
+</template>
+
+<style>
+</style>
+
+<script>
+import TensorMonkey from "../components/TensorMonkey.vue";
+
+export default {
+  name: "PageIndex",
+  components: { TensorMonkey }
+};
+</script>
+
+<style lang="stylus">
+iframe {
+  width: 100%;
+}
+</style>
