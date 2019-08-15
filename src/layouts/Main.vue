@@ -51,6 +51,10 @@ export default {
 
   computed: mapState(["isBusy", "user"]),
 
+  mounted() {
+    this.$root.$on("firebaseLoggedIn", () => (this.isVisible.login = false));
+  },
+
   data() {
     return {
       pkg,

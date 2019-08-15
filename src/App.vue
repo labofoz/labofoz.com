@@ -86,6 +86,8 @@ export default {
           avatar: user.photoURL,
           color: "positive"
         });
+
+        this.$root.$emit("firebaseLoggedIn");
       } else {
         if (this.user.uid) {
           this.$q.notify({

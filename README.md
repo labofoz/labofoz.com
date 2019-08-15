@@ -36,3 +36,18 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 - [Create a Firebase app](https://firebase.google.com)
 - [Register your Firebase app](https://firebase.google.com/docs/web/setup#prerequisites)
 - Edit `firebase.config.json` and `.firebaserc` to suit your project
+
+---
+
+## Global Events
+
+```bash
+# Called to initiate a login
+firebaseLogin
+
+# Called to initiate a logout
+firebaseLogout
+
+# Called when user logged in
+firebaseLoggedIn
+```
