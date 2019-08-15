@@ -31,7 +31,7 @@ q-layout(view='lHh Lpr lFf')
       q-card-actions
         q-btn(@click='isVisible.login = false') Cancel
         q-space
-        q-btn(color='primary') Login with Firebase
+        q-btn(color='primary' :loading='isBusy.app' @click='firebaseLogin') Login with Firebase
   
   //- Route
   q-page-container
@@ -39,11 +39,14 @@ q-layout(view='lHh Lpr lFf')
 </template>
 
 <script>
-import { openURL } from "quasar";
 import pkg from "../../package.json";
+import { mapState } from "vuex";
 
 export default {
   name: "Main",
+
+  computed: mapState(["isBusy"]),
+
   data() {
     return {
       pkg,
@@ -57,8 +60,11 @@ export default {
       }
     };
   },
+
   methods: {
-    openURL
+    firebaseLogin() {
+      this.$root.$emit("firebaseLogin");
+    }
   }
 };
 </script>

@@ -35,3 +35,4 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 - Install firebase tools: `npm install -g firebase-tools`
 - [Create a Firebase app](https://firebase.google.com)
 - [Register your Firebase app](https://firebase.google.com/docs/web/setup#prerequisites)
+- Edit `firebase.config.json` and `.firebaserc` to suit your project
