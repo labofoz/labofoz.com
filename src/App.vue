@@ -28,14 +28,20 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then(result => {
-          // let token = result.credential.accessToken;
-          // let user = result.user;
+          let user = result.user;
+          this.$q.notify({
+            message: `Welcome back ${user.displayName}`,
+            color: "positive"
+          });
         })
         .catch(error => {
           let errorCode = error.code;
           let errorMessage = error.message;
 
-          console.log(`{${errorCode}} Error signing in: ${errorMessage}`);
+          this.$q.notify({
+            message: `{${errorCode}} Error signing in: ${errorMessage}`,
+            color: "negative"
+          });
         })
         .finally(() => {
           this.$store.commit("set", ["isBusy.app", false]);
