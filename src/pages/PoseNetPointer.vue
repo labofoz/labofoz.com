@@ -27,7 +27,7 @@ export default {
      */
     startPosenetPointer() {
       if (!this.posenetPointer) {
-        let pointer = new PosenetPointer();
+        let pointer = new PosenetPointer({ debug: true });
 
         if (pointer.isSupported) {
           this.$store.commit("set", ["posenetPointer", pointer]);

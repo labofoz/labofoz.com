@@ -1,4 +1,4 @@
-// import Posenet from '@tensorflow-models/posenet'
+import * as Posenet from "@tensorflow-models/posenet";
 import { merge } from "lodash";
 
 export default class PoseNetPointer {
@@ -15,9 +15,109 @@ export default class PoseNetPointer {
    * Starts running inference with PoseNet
    * @param {Function} cb A callback to call once PoseNet is ready
    */
-  start(cb) {
-    this.setupFeed();
+  async start(cb) {
+    await this.setupFeed();
+    await this.initPosenet();
+    this._isTracking = true;
+    await this.trackPosesLoop(this);
     cb();
+  }
+
+  /**
+   * Recursive method for tracking poses on each animationFrame:
+   * - This method is recursive, once called it continues until after
+   *    pointer.stop() is called or until this._isTracking is false
+   *
+   * @param {PosenetPointer} context The this context, since we're in the
+   *    constructor scope now
+   */
+  trackPosesLoop(context) {
+    context.posenet && context.trackPoses();
+    if (context.poses) {
+      // context.runCalculations();
+      context.emitEvents();
+    }
+
+    context._isTracking &&
+      requestAnimationFrame(() => this.trackPosesLoop(context));
+  }
+
+  /**
+   * Either assigns passed poses or estimates new poses
+   * - Automatically adjusts algorithm to match "single" or "multiple mode"
+   * - If debug is on, displays the points and skeletons overlays on the webcam
+   */
+  async trackPoses() {
+    let poses = [];
+
+    // Get single pose
+    if (this.options.posenet.maxUsers === 1) {
+      let pose = await this.posenet.estimateSinglePose(
+        this.video,
+        this.options.posenet.imageScaleFactor,
+        false,
+        this.options.posenet.outputStride
+      );
+      poses = [pose];
+      // Get multiple poses
+    } else {
+      poses = await this.posenet.estimateMultiplePoses(
+        this.video,
+        this.options.posenet.imageScaleFactor,
+        false,
+        this.options.posenet.outputStride,
+        this.options.posenet.maxUsers,
+        this.options.posenet.scoreThreshold,
+        this.options.posenet.nmsRadius
+      );
+    }
+
+    // Publicly set poses
+    this.poses = poses;
+    console.log("trackPoses", this.poses);
+
+    // Only draw when debug is on
+    this.debug && poses && this.debugPoses();
+  }
+
+  /**
+   * @TODO Emits events
+   * - Emits onSeeClarkePoseUpdates with (this.poses, seeclarke)
+   */
+  emitEvents() {
+    window.dispatchEvent(
+      new CustomEvent("onSeeClarkePoseUpdates", {
+        detail: {
+          context: this
+        }
+      })
+    );
+  }
+
+  /**
+   * Loops through each pose and draws their keypoints/skeletons
+   * - Draws skeletons and keypoints
+   */
+  debugPoses() {
+    const context = this.canvas.getContext("2d");
+
+    this.poses.forEach(({ score, keypoints }) => {
+      if (score >= this.options.posenet.minPoseConfidence) {
+        const adjacentKeypoints = Posenet.getAdjacentKeyPoints(
+          keypoints,
+          this.options.posenet.minPartConfidence,
+          context
+        );
+
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawSkeleton(adjacentKeypoints, context);
+        this.drawKeypoints(
+          keypoints,
+          this.options.posenet.minPartConfidence,
+          context
+        );
+      }
+    });
   }
 
   /**
@@ -44,6 +144,14 @@ export default class PoseNetPointer {
   }
 
   /**
+   * Init PoseNet
+   */
+  async initPosenet() {
+    if (!this.posenet)
+      this.posenet = await Posenet.load(this.options.posenet.multiplier);
+  }
+
+  /**
    * Sets defaults to the missing constructor options:
    * - Sets defaults
    * - Creates a default debug container
@@ -60,7 +168,6 @@ export default class PoseNetPointer {
         opts.target.style.position = "relative";
         document.body.appendChild(opts.target);
       }
-      opts.target.style.display = "none";
     }
 
     const $video = opts.video || this.createDefaultVideo(opts.target);
@@ -90,6 +197,8 @@ export default class PoseNetPointer {
       },
       opts
     );
+
+    opts.target.style.display = this.options.debug ? "initial" : "none";
   }
 
   /**
@@ -177,5 +286,75 @@ export default class PoseNetPointer {
       console.error(e);
       return false;
     }
+  }
+
+  /**
+   * Draw each tracked keypoint
+   * - Draws keypoints only when they are "visible"
+   *
+   * @see https://github.com/tensorflow/tfjs-models/tree/master/posenet
+   *
+   * @param {ARR} keypoints The list of all keypoints
+   * @param {NUM} minConfidence The minimum keypoint score needed to track
+   * @param {OBJ} context The canvas context to draw into
+   */
+  drawKeypoints(keypoints, minConfidence, context) {
+    keypoints.forEach(({ position, score }) => {
+      if (score > minConfidence) {
+        context.beginPath();
+        context.arc(position.x, position.y, 15, 0, 2 * Math.PI);
+        context.fillStyle = "#00ff00";
+        context.fill();
+      }
+    });
+  }
+
+  /**
+   * Draw each tracked skeleton
+   * @see https://github.com/tensorflow/tfjs-models/tree/master/posenet
+   *
+   * - Draws all visible segments captured with PoseNet.getAdjacentKeyPoints
+   *
+   * @param {ARR} adjacentPoints The list of all keypoints and their relationships
+   * @param {OBJ} context The canvas context to draw into
+   */
+  drawSkeleton(adjacentPoints, context) {
+    adjacentPoints.forEach(keypoints => {
+      this.drawSegment(
+        this.toTuple(keypoints[0].position),
+        this.toTuple(keypoints[1].position),
+        context
+      );
+    });
+  }
+
+  /**
+   * Converts a position to a tuple
+   * - Essentially converts an {x, y} object into a [y, x] array
+   *
+   * @param {OBJ} position {x, y}
+   */
+  toTuple({ x, y }) {
+    return [y, x];
+  }
+
+  /**
+   * Draws the skeleton segment
+   * - A segment is a straight line between two tuples
+   *
+   * @param {OBJ} fromTuple [ay, ax] The starting point
+   * @param {OBJ} toTuple [by, bx] The ending point
+   * @param {HEX} color The color to draw in
+   * @param {OBJ} context The canvas context to draw in
+   */
+  drawSegment([ay, ax], [by, bx], context) {
+    const scale = 1;
+
+    context.beginPath();
+    context.moveTo(ax * scale, ay * scale);
+    context.lineTo(bx * scale, by * scale);
+    context.lineWidth = 10;
+    context.strokeStyle = "#ff00ff";
+    context.stroke();
   }
 }
