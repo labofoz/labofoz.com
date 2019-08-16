@@ -101,7 +101,3 @@ export default {
   }
 };
 </script>
-
-<style lang="stylus">
-@import 'assets/style.styl';
-</style>

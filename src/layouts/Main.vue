@@ -79,3 +79,9 @@ export default {
   }
 };
 </script>
+
+<style lang="stylus">
+header.q-header {
+  background: $synthwave;
+}
+</style>
