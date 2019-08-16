@@ -1,5 +1,6 @@
 <template lang="pug">
 q-page.q-pa-md
+  #pointer(ref='pointer')
   .container
     .flex.row.q-col-gutter-lg.items-center(style='margin-top: 100px')
       .col-xs-12.col-sm-6
@@ -8,6 +9,7 @@ q-page.q-pa-md
         p
           q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer' :loading='isBusy.posenet')
       .col-xs-12.col-sm-6
+        #debug-wrap(ref='debug')
 </template>
 
 <script>
@@ -27,14 +29,22 @@ export default {
      */
     startPosenetPointer() {
       if (!this.posenetPointer) {
-        let pointer = new PosenetPointer({ debug: true });
+        let pointer = new PosenetPointer({
+          debug: true,
+          target: this.$refs.debug
+        });
 
         if (pointer.isSupported) {
           this.$store.commit("set", ["posenetPointer", pointer]);
           this.$store.commit("set", ["isBusy.posenet", true]);
 
+          // Start Posenet
           pointer.start(() => {
             this.$store.commit("set", ["isBusy.posenet", false]);
+            pointer.options.canvas.style.height = `${pointer.options.video.clientHeight}px`;
+            window.addEventListener("posenetPointerUpdated", context =>
+              this.onUpdate(context)
+            );
           });
         } else {
           this.$q.notify({
@@ -43,7 +53,35 @@ export default {
           });
         }
       }
+    },
+
+    /**
+     * onUpdate
+     */
+    onUpdate(ev) {
+      this.$refs.pointer.style.left = `${this.posenetPointer.poses[0].pointedAt.x}px`;
+      this.$refs.pointer.style.top = `${this.posenetPointer.poses[0].pointedAt.y}px`;
     }
   }
 };
 </script>
+
+<style lang="stylus">
+#debug-wrap {
+  position: relative;
+
+  video, canvas {
+    width: 100%;
+    height: auto;
+  }
+}
+
+#pointer {
+  background: red;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  position: fixed;
+  z-index: 99999;
+}
+</style>
