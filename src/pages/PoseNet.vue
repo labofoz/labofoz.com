@@ -10,7 +10,7 @@ q-page.q-pa-md
         q-card
           q-card-section.bg-primary
             .text-h6 PoseNet Pointer
-            .text-subtitle2 Control a pointer with your head!
+            .text-subtitle2 A set of tools to help you interact with the web and connected devices handsfree using your head.
           q-seperator
           q-card-actions
             q-space

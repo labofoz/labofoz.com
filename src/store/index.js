@@ -3,7 +3,6 @@ import Vuex from "vuex";
 import { set } from "lodash";
 
 // import example from './module-example'
-
 Vue.use(Vuex);
 
 /*
@@ -26,7 +25,10 @@ export default function(/* { ssrContext } */) {
       },
 
       // Firebase user data
-      user: {}
+      user: {},
+
+      // The posenet pointer object
+      posenetPointer: null
     },
 
     mutations: {
