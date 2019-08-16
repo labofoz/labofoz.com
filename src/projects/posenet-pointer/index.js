@@ -74,10 +74,9 @@ export default class PoseNetPointer {
 
     // Publicly set poses
     this.poses = poses;
-    console.log("trackPoses", this.poses);
 
     // Only draw when debug is on
-    this.debug && poses && this.debugPoses();
+    this.options.debug && poses && this.debugPoses();
   }
 
   /**
@@ -100,6 +99,7 @@ export default class PoseNetPointer {
    */
   debugPoses() {
     const context = this.canvas.getContext("2d");
+    console.log("debugPoses");
 
     this.poses.forEach(({ score, keypoints }) => {
       if (score >= this.options.posenet.minPoseConfidence) {
