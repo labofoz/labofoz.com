@@ -22,11 +22,14 @@ export default {
   data: () => ({}),
 
   methods: {
+    /**
+     * Initializes PoseNet Pointer
+     */
     startPosenetPointer() {
       if (!this.posenetPointer) {
         let pointer = new PosenetPointer();
 
-        if (pointer.isWebGLSupported()) {
+        if (pointer.isSupported) {
           this.$store.commit("set", ["posenetPointer", pointer]);
           this.$store.commit("set", ["isBusy.posenet", true]);
 
