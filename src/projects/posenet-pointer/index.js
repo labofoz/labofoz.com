@@ -1,5 +1,6 @@
-import * as Posenet from "@tensorflow-models/posenet";
+// import * as Posenet from "@tensorflow-models/posenet";
 import { merge } from "lodash";
+const Posenet = window.posenet;
 
 export default class PoseNetPointer {
   constructor(opts = {}) {
@@ -154,12 +155,13 @@ export default class PoseNetPointer {
    * Init PoseNet
    */
   async initPosenet() {
-    if (!this.posenet)
+    if (!this.posenet) {
       this.posenet = await Posenet.load({
         architecture: this.options.posenet.architecture,
         multiplier: this.options.posenet.multiplier,
         outputStride: this.options.posenet.outputStride
       });
+    }
   }
 
   /**

@@ -86,9 +86,11 @@ export default {
           pointer.start(() => {
             this.$store.commit("set", ["isBusy.posenet", false]);
             pointer.options.canvas.style.height = `${pointer.options.video.clientHeight}px`;
-            window.addEventListener("posenetPointerUpdated", context =>
-              this.onUpdate(context)
-            );
+          });
+
+          // Window listener
+          window.addEventListener("posenetPointerUpdated", context => {
+            this.onUpdate(context);
           });
         } else {
           this.$q.notify({
