@@ -18,7 +18,7 @@ q-layout(view='lHh Lpr lFf')
   q-drawer(v-model='isVisible.sidebar' bordered content-class='bg-grey-2')
     q-list
       q-item-label(header) Essential Links
-      q-item(v-for='(menu, key) in sidebar.menu' :key='key' :to='menu.to')
+      q-item(v-for='(menu, key) in sidebar.menu' :key='key' :to='menu.to' exact)
         q-item-section(avatar)
           q-icon(:name='menu.icon')
         q-item-section
@@ -64,7 +64,14 @@ export default {
       },
 
       sidebar: {
-        menu: [{ label: "Home", icon: "home", to: { name: "Home" } }]
+        menu: [
+          { label: "Home", icon: "home", to: { name: "Home" } },
+          {
+            label: "PoseNet",
+            icon: "accessibility_new",
+            to: { name: "PoseNet" }
+          }
+        ]
       }
     };
   },

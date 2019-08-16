@@ -5,6 +5,28 @@ const routes = [
     children: [
       { name: "Home", path: "", component: () => import("pages/Home.vue") }
     ]
+  },
+  {
+    path: "/posenet",
+    component: () => import("layouts/Main.vue"),
+    children: [
+      {
+        name: "PoseNet",
+        path: "",
+        component: () => import("pages/PoseNet.vue")
+      }
+    ]
+  },
+  {
+    path: "/posenet/pointer",
+    component: () => import("layouts/Main.vue"),
+    children: [
+      {
+        name: "PoseNetPointer",
+        path: "",
+        component: () => import("pages/PoseNetPointer.vue")
+      }
+    ]
   }
 ];
 
