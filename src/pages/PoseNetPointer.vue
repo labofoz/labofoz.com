@@ -6,7 +6,7 @@ q-page.q-pa-md
         h1.text-h4 PoseNet Pointer
         p.text-h5.text-grey A set of tools to help you interact with the web and connected devices handsfree using your head.
         p
-          q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer')
+          q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer' :loading='isBusy.posenet')
       .col-xs-12.col-sm-6
 </template>
 
@@ -17,15 +17,28 @@ import { mapState } from "vuex";
 export default {
   name: "PoseNetPointer",
 
-  computed: mapState(["posenetPointer"]),
+  computed: mapState(["posenetPointer", "isBusy"]),
+
+  data: () => ({}),
 
   methods: {
     startPosenetPointer() {
       if (!this.posenetPointer) {
-        const pointer = new PosenetPointer();
-        this.$store.commit("set", ["posenetPointer", pointer]);
+        let pointer = new PosenetPointer();
 
-        pointer.start();
+        if (pointer.isWebGLSupported()) {
+          this.$store.commit("set", ["posenetPointer", pointer]);
+          this.$store.commit("set", ["isBusy.posenet", true]);
+
+          pointer.start(() => {
+            this.$store.commit("set", ["isBusy.posenet", false]);
+          });
+        } else {
+          this.$q.notify({
+            message: "WebGL is not supported on your device",
+            color: "negative"
+          });
+        }
       }
     }
   }

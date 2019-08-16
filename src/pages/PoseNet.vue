@@ -11,7 +11,7 @@ q-page.q-pa-md
           q-card-section.bg-primary
             .text-h6 PoseNet Pointer
             .text-subtitle2 A set of tools to help you interact with the web and connected devices handsfree using your head.
-          q-seperator
+          q-separator
           q-card-actions
             q-space
             q-btn(color='primary' :to='{name: "PoseNetPointer"}') Explore This

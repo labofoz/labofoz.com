@@ -21,7 +21,8 @@ export default function(/* { ssrContext } */) {
 
     state: {
       isBusy: {
-        app: false
+        app: false,
+        posenet: false
       },
 
       // Firebase user data
