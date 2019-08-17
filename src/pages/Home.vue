@@ -13,17 +13,21 @@ q-page.q-pa-md
     .note(style='margin-top: 100px')
       p.note-title More coming soon
       p I'm still getting everything put together. Come back soon or follow me on <a href="https://twitter.ozramos.com">Twitter @HeyOzRamos</a>
-</template>
 
-<style>
-</style>
+  .container
+    h2 Recent Projects
+    .row.q-col-gutter-lg
+      .col-xs-12.col-sm-6.col-lg-4
+        PoseNetPointerCard
+</template>
 
 <script>
 import TensorMonkey from "../components/TensorMonkey.vue";
+import PoseNetPointerCard from "../components/cards/PoseNetPointerCard";
 
 export default {
   name: "PageIndex",
-  components: { TensorMonkey }
+  components: { TensorMonkey, PoseNetPointerCard }
 };
 </script>
 

@@ -1,6 +1,6 @@
 {
   "name": "labofoz",
-  "version": "2.8.15",
+  "version": "2.8.16",
   "description": "A library of deep learning models",
   "productName": "Lab of Oz",
   "cordovaId": "com.labofoz",
@@ -16,6 +16,7 @@
     "firebase": "^6.3.5",
     "firebaseui": "^4.1.0",
     "lodash": "^4.17.15",
+    "posenet-pointer": "^0.0.1",
     "quasar": "^1.0.0"
   },
   "devDependencies": {

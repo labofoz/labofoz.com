@@ -7,21 +7,15 @@ q-page.q-pa-md
   .container
     .row.q-col-gutter-lg
       .col-xs-12.col-sm-6.col-lg-4
-        q-card
-          q-card-section(style='padding: 0')
-            video(src='https://i.imgur.com/3lBstel.mp4' style='width: 100%' controls loop autoplay)
-          q-separator
-          q-card-section.bg-primary
-            .text-h6 PoseNet Pointer
-            .text-subtitle2 A set of tools to help you interact with the web and connected devices handsfree using your head.
-          q-separator
-          q-card-actions
-            q-space
-            q-btn(color='primary' :to='{name: "PoseNetPointer"}') Explore This
+        PoseNetPointerCard
 </template>
 
 <script>
+import PoseNetPointerCard from "../components/cards/PoseNetPointerCard";
+
 export default {
-  name: "PoseNet"
+  name: "PoseNet",
+
+  components: { PoseNetPointerCard }
 };
 </script>

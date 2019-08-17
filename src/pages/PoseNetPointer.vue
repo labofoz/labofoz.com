@@ -4,10 +4,20 @@ q-page.q-pa-md
   .container
     .flex.row.q-col-gutter-lg.items-center(style='margin-top: 100px')
       .col-xs-12.col-sm-6
-        h1.text-h4 PoseNet Pointer <small style='font-size: 14px'>👷‍♂️ work in progress</small>
+        h1.text-h4
+          | PoseNet Pointer 
+          a.q-pl-sm(href='https://npmjs.com/package/posenet-pointer' target='_blank')
+            img(src='https://img.shields.io/npm/v/posenet-pointer')
         p.text-h5.text-grey A set of tools to help you interact with the web and connected devices handsfree using your head!
         p
           q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer' :loading='isBusy.posenet')
+        p
+          a.q-pr-sm(href='https://github.com/ozramos/posenet-pointer')
+            img(src='https://img.shields.io/github/last-commit/ozramos/posenet-pointer')
+          a.q-pr-sm(href='https://npmjs.com/package/posenet-pointer')
+            img(src='https://img.shields.io/bundlephobia/min/posenet-pointer')
+          a(href='https://github.com/ozramos/posenet-pointer')
+            img(src='https://img.shields.io/github/stars/ozramos/posenet-pointer?style=social')
         p.text-grey Special thanks to <a href="http://studioforcreativeinquiry.org/">The Studio for Creative Inquiry</a> for their<br>support for Handsfree.js, my other related project
       .col-xs-12.col-sm-6
         video(v-if='!posenetLoaded' src='https://i.imgur.com/3lBstel.mp4' style='width: 100%' controls loop autoplay)
@@ -22,8 +32,6 @@ q-page.q-pa-md
             .text-subtitle2 These should be finished during <a href="https://twitter.com/search?q=(%23100DaysofCode)%20(from%3Aheyozramos)&src=typed_query">my #100DaysOfCode challenge</a>
           q-card-section
             ul
-              li Publish code to NPM
-              li Start documentation
               li Add page scrolling
               li Add custom face gesture recognition
               li Add custom hand gesture recognition
@@ -43,6 +51,9 @@ q-page.q-pa-md
             .text-h6 📜 Changelog
             .text-subtitle2 Coming soon
           q-card-section
+            ul
+              li <strong>8/16</strong> - Start documentation
+              li <strong>8/16</strong> - Publish code to NPM
       .col-xs12.col-sm-6.col-lg-4
         q-card
           q-card-section.bg-primary
@@ -54,7 +65,7 @@ q-page.q-pa-md
 </template>
 
 <script>
-import PosenetPointer from "../projects/posenet-pointer";
+import PosenetPointer from "posenet-pointer";
 import { mapState } from "vuex";
 
 export default {
