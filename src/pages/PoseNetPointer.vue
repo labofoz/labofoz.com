@@ -32,17 +32,87 @@ q-page.q-pa-md
           q-card-section.text-body1(style='padding-top: 20px')
             p <strong>PoseNet Pointer</strong> is a JavaScript library that adds face-controlled pointers ("face pointers") to your projects in just a few lines of code. It sits on top of <a href="https://github.com/tensorflow/tfjs-models/tree/master/posenet">PoseNet, a human pose estimator</a> which among other things returns 5 head keypoints for your eyes, ears, and nose. From these 5 keypoints, PoseNet Pointer is able to roughly determine your head's pose - it's Yaw, Pitch, and Roll - which is what allows us to do interesting things like determine where on the screen to place the pointer!
 
-          .row.q-col-gutter-lg
-            .col-xs-12.col-sm-6.col-md-4(style='padding-left: 40px')
+          .row.q-col-gutter-lg(style='padding: 20px')
+            .col-xs-12.col-sm-6.col-md-4
               q-list(bordered separator)
-                q-item(clickable ripple)
+                q-item(clickable ripple :active='subroute === "install"' @click='subroute = "install"')
                   q-item-section Installing
-                q-item(clickable ripple)
+                q-item(clickable ripple :active='subroute === "configure"' @click='subroute = "configure"')
                   q-item-section Configuring
-            .col-xs-12.col-sm-6.col-md-8(style='padding: 20px')
+            .col-xs-12.col-sm-6.col-md-8
               q-card
-                q-card-section
-                  h1 asdfasdf
+                q-card-section(v-if='subroute === "install"')
+                  h5 Getting Started
+                  p via HTML (adds <code>PosenetPointer</code> to global namespace)
+                  highlight-code(lang='html').
+                    &lt;!-- Either load a specific version (recommended)... --&gt;
+                    &lt;script defer src="https://unpkg.com/posenet-pointer@0.0.1"&gt;&lt;/script&gt;
+
+                    &lt;!-- ...or use the latest (not recommended yet 😅) --&gt;
+                    &lt;script defer src="https://unpkg.com/posenet-pointer"&gt;&lt;/script&gt;
+
+                  p or via Node
+                  highlight-code(lang='javascript').
+                    import PosenetPointer from 'posenetPointer'
+
+                  q-separator.q-mt-xl
+                  p.q-mt-xl In either case, you can then get started with
+                  highlight-code(lang='javascript').
+                    // Instantiate and start
+                    const pointer = new PosenetPointer()
+                    pointer.start()
+
+                    // Grab a reference to a pointer element
+                    $pointer = document.querySelector('#pointer')
+
+                    // Adds a callback called "placePointer" that's called on every frame
+                    pointer.use('placePointer', poses => {
+                      $pointer.style.top = `${poses[0].pointedAt.y}px`;
+                      $pointer.style.left = `${poses[0].pointedAt.x}px`;
+                    })
+
+                q-card-section(v-if='subroute === "configure"')
+                  h5 Configure
+                  highlight-code(lang='javascript').
+                    {
+                      // The video tag to contain the webcam stream
+                      // - If null, one will be created
+                      video: document.createElement('video'),
+
+                      // The canvas tag to contain the green/magenta debug info
+                      // - If null, one will be created
+                      canvas: document.createElement('canvas'),
+
+                      // The container element that contains both the video/canvas
+                      // - If null, one will be created
+                      target: document.createElement('p'),
+
+                      // Whether or not to display the video tag and debug canvas
+                      debug: false,
+
+                      // Which camera to use
+                      // @see https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/facingMode
+                      facingMode: "user",
+
+                      // How many poses to use as a "buffer" for smoothing
+                      // lower number use less smoothing
+                      poseStackSize: 8,
+
+                      // Posenet config
+                      // @see https://github.com/tensorflow/tfjs-models/tree/master/posenet
+                      posenet: {
+                        architecture: "MobileNetV1",
+                        multiplier: 0.75,
+                        maxUsers: 1,
+                        minPoseConfidence: 0.1,
+                        minPartConfidence: 0.5,
+                        outputStride: 16,
+                        inputResolution: 257,
+                        nmsRadius: 20,
+                        scoreThreshold: 0.5
+                      }
+                    }                  
+
   .container
     .flex.row.q-col-gutter-lg
       .col-xs12.col-sm-6.col-lg-4
@@ -94,7 +164,8 @@ export default {
   computed: mapState(["posenetPointer", "isBusy"]),
 
   data: () => ({
-    posenetLoaded: false
+    posenetLoaded: false,
+    subroute: "install"
   }),
 
   methods: {
