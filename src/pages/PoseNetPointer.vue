@@ -8,7 +8,7 @@ q-page.q-pa-md
           | PoseNet Pointer 
           a.q-pl-sm(href='https://npmjs.com/package/posenet-pointer' target='_blank')
             img(src='https://img.shields.io/npm/v/posenet-pointer')
-        p.text-h5.text-grey A set of tools to help you interact with the web and connected devices handsfree using your head!
+        p.text-h5.text-grey Quickly add "face pointers" to your projects with TensorFlow's PoseNet
         p
           q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer' :loading='isBusy.posenet')
         p
@@ -24,6 +24,26 @@ q-page.q-pa-md
         #debug-wrap(ref='debug')
 
   .container(style='margin-top: 200px')
+    .flex.row.q-col-gutter-lg
+      .col
+        q-card
+          q-card-section.bg-primary
+            h2 Getting Started
+          q-card-section.text-body1(style='padding-top: 20px')
+            p <strong>PoseNet Pointer</strong> is a JavaScript library that adds face-controlled pointers ("face pointers") to your projects in just a few lines of code. It sits on top of <a href="https://github.com/tensorflow/tfjs-models/tree/master/posenet">PoseNet, a human pose estimator</a> which among other things returns 5 head keypoints for your eyes, ears, and nose. From these 5 keypoints, PoseNet Pointer is able to roughly determine your head's pose - it's Yaw, Pitch, and Roll - which is what allows us to do interesting things like determine where on the screen to place the pointer!
+
+          .row.q-col-gutter-lg
+            .col-xs-12.col-sm-6.col-md-4(style='padding-left: 40px')
+              q-list(bordered separator)
+                q-item(clickable ripple)
+                  q-item-section Installing
+                q-item(clickable ripple)
+                  q-item-section Configuring
+            .col-xs-12.col-sm-6.col-md-8(style='padding: 20px')
+              q-card
+                q-card-section
+                  h1 asdfasdf
+  .container
     .flex.row.q-col-gutter-lg
       .col-xs12.col-sm-6.col-lg-4
         q-card
