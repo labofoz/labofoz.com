@@ -6,8 +6,9 @@ q-layout(view='lHh Lpr lFf')
       q-btn(flat dense round @click='isVisible.sidebar = !isVisible.sidebar' aria-label='Menu')
         q-icon(name='menu')
       q-toolbar-title
-        span Lab of Oz
-        small(style='font-size: 12px; margin-left: 10px;') v{{ pkg.version }}
+        router-link(:to='{name: "Home"}' style='text-decoration: none; color: #fff;')
+          | Lab of Oz
+          small(style='font-size: 12px; margin-left: 10px;') v{{ pkg.version }}
       q-btn(v-if='!user.uid' color='secondary' @click='isVisible.login = true') Login
       q-btn(v-else color='secondary' @click='firebaseLogout')
         q-avatar.q-mr-sm(size=20)
@@ -60,7 +61,7 @@ export default {
       pkg,
       isVisible: {
         login: false,
-        sidebar: this.$q.platform.is.desktop
+        sidebar: false
       },
 
       sidebar: {

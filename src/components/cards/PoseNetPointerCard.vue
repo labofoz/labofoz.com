@@ -5,7 +5,7 @@ q-card
   q-separator
   q-card-section.bg-primary
     .text-h6 PoseNet Pointer
-    .text-subtitle2 A set of tools to help you interact with the web and connected devices handsfree using your head.
+    .text-subtitle2 Add "face pointers" to your projects with TensorFlow's PoseNet
   q-card-section
     .q-pt-lg
       a.q-pr-sm(href='https://npmjs.com/package/posenet-pointer' target='_blank')

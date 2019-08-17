@@ -82,7 +82,8 @@ export default {
      * Initializes PoseNet Pointer
      */
     startPosenetPointer() {
-      if (!this.posenetPointer) {
+      // @FIXME We shouldn't need this to do this
+      if (!window.pointer || !window.pointer.options) {
         this.posenetLoaded = true;
         let pointer = new PosenetPointer({
           debug: true,
@@ -90,7 +91,7 @@ export default {
         });
 
         if (pointer.isSupported) {
-          this.$store.commit("set", ["posenetPointer", pointer]);
+          window.pointer = pointer;
           this.$store.commit("set", ["isBusy.posenet", true]);
 
           // Start Posenet
@@ -116,8 +117,8 @@ export default {
      * onUpdate
      */
     onUpdate(ev) {
-      this.$refs.pointer.style.left = `${this.posenetPointer.poses[0].pointedAt.x}px`;
-      this.$refs.pointer.style.top = `${this.posenetPointer.poses[0].pointedAt.y}px`;
+      this.$refs.pointer.style.left = `${window.pointer.poses[0].pointedAt.x}px`;
+      this.$refs.pointer.style.top = `${window.pointer.poses[0].pointedAt.y}px`;
     }
   }
 };
