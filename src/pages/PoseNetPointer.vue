@@ -20,7 +20,7 @@ q-page.q-pa-md
             img(src='https://img.shields.io/github/stars/ozramos/posenet-pointer?style=social')
         p.text-grey Special thanks to <a href="http://studioforcreativeinquiry.org/">The Studio for Creative Inquiry</a> for their<br>support for Handsfree.js, my other related project
       .col-xs-12.col-sm-6
-        video(v-if='!posenetLoaded' src='https://i.imgur.com/3lBstel.mp4' style='width: 100%' controls loop autoplay)
+        video(v-if='!posenetLoaded' src='https://i.imgur.com/3lBstel.mp4' style='width: 100%;' controls loop autoplay)
         #debug-wrap(ref='debug')
 
   .container(style='margin-top: 200px')
@@ -39,6 +39,8 @@ q-page.q-pa-md
                   q-item-section Installing
                 q-item(clickable ripple :active='subroute === "configure"' @click='subroute = "configure"')
                   q-item-section Configuring
+                q-item(clickable ripple :active='subroute === "codepens"' @click='subroute = "codepens"')
+                  q-item-section CodePens
             .col-xs-12.col-sm-6.col-md-8
               q-card
                 q-card-section(v-if='subroute === "install"')
@@ -113,6 +115,13 @@ q-page.q-pa-md
                       }
                     }                  
 
+                q-card-section(v-if='subroute === "codepens"')
+                  h5 CodePens
+                  p Checkout the following examples:
+                  ul
+                    li
+                      a(href="https://codepen.io/labofoz/pen/OJLXbJP") Basic Example
+                  
   .container
     .flex.row.q-col-gutter-lg
       .col-xs12.col-sm-6.col-lg-4
@@ -191,10 +200,7 @@ export default {
             pointer.options.canvas.style.height = `${pointer.options.video.clientHeight}px`;
           });
 
-          // Window listener
-          window.addEventListener("posenetPointerUpdated", context => {
-            this.onUpdate(context);
-          });
+          this.setupPlugins();
         } else {
           this.$q.notify({
             message: "WebGL is not supported on your device",
@@ -204,12 +210,26 @@ export default {
       }
     },
 
-    /**
-     * onUpdate
-     */
-    onUpdate(ev) {
-      this.$refs.pointer.style.left = `${window.pointer.poses[0].pointedAt.x}px`;
-      this.$refs.pointer.style.top = `${window.pointer.poses[0].pointedAt.y}px`;
+    setupPlugins() {
+      const pointer = window.pointer;
+
+      /**
+       * Position the pointer
+       */
+      pointer.use("placePointer", poses => {
+        this.$refs.pointer.style.left = `${window.pointer.poses[0].pointedAt.x}px`;
+        this.$refs.pointer.style.top = `${window.pointer.poses[0].pointedAt.y}px`;
+      });
+
+      /**
+       * Scroll the page
+       */
+      pointer.use("scrollPage", poses => {
+        let y = poses[0].pointedAt.y;
+        if (y < 0) window.scrollTo(0, window.scrollY + y * 0.05);
+        else if (y > window.innerHeight)
+          window.scrollTo(0, window.scrollY + (y - window.innerHeight) * 0.05);
+      });
     }
   }
 };
@@ -222,6 +242,10 @@ export default {
   video, canvas {
     width: 100%;
     height: auto;
+  }
+
+  video {
+    visibility: hidden !important;
   }
 }
 
