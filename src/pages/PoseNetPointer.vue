@@ -12,6 +12,8 @@ q-page.q-pa-md
         p
           q-btn(color='primary' size='xl' icon='videocam' label='Try It' @click='startPosenetPointer' :loading='isBusy.posenet')
         p
+          small Model is ~3Mb; give it a few moments on slow connections
+        p
           a.q-pr-sm(href='https://github.com/ozramos/posenet-pointer')
             img(src='https://img.shields.io/github/last-commit/ozramos/posenet-pointer')
           a.q-pr-sm(href='https://npmjs.com/package/posenet-pointer')
@@ -55,7 +57,7 @@ q-page.q-pa-md
 
                   p or via Node
                   highlight-code(lang='javascript').
-                    import PosenetPointer from 'posenetPointer'
+                    import PosenetPointer from 'posenet-pointer'
 
                   q-separator.q-mt-xl
                   p.q-mt-xl In either case, you can then get started with
@@ -131,9 +133,6 @@ q-page.q-pa-md
             .text-subtitle2 These should be finished during <a href="https://twitter.com/search?q=(%23100DaysofCode)%20(from%3Aheyozramos)&src=typed_query">my #100DaysOfCode challenge</a>
           q-card-section
             ul
-              li Add page scrolling
-              li Add custom face gesture recognition
-              li Add custom hand gesture recognition
               li Create workshops or starter kits
               li Wrap as a Chrome Extension
               li Wrap as a mobile app
@@ -141,6 +140,8 @@ q-page.q-pa-md
               li Integrate with A-Frame
               li Integrate with Babylon.js
               li Integrate with LMMS, FLStudio, or Ableton Live
+              li Add custom face gesture recognition
+              li Add custom hand gesture recognition
               li Use deep learning to "learn" cursor position
               li Use deep learning to "learn" head pose
               li Use deep learning to add finger pointers
@@ -151,8 +152,9 @@ q-page.q-pa-md
             .text-subtitle2 Coming soon
           q-card-section
             ul
+              li <strong>8/16</strong> - <a href="https://codepen.io/labofoz/pen/OJLXbJP?editors=0010">Page scrolling plugin demo</a>
               li <strong>8/16</strong> - Start documentation
-              li <strong>8/16</strong> - Publish code to NPM
+              li <strong>8/16</strong> - <a href="https://www.npmjs.com/package/posenet-pointer">Publish code to NPM</a>
       .col-xs12.col-sm-6.col-lg-4
         q-card
           q-card-section.bg-primary
