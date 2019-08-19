@@ -27,6 +27,17 @@ const routes = [
         component: () => import("pages/PoseNetPointer.vue")
       }
     ]
+  },
+  {
+    path: "/posenet/pointer-dataset-maker",
+    component: () => import("layouts/Main.vue"),
+    children: [
+      {
+        name: "PoseNetPointerDatasetMaker",
+        path: "",
+        component: () => import("pages/PoseNetPointerDatasetMaker.vue")
+      }
+    ]
   }
 ];
 

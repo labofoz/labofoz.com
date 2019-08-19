@@ -21,16 +21,24 @@ q-page.q-pa-md
         PoseNetPointerCard
       .col-xs-12.col-sm-6.col-lg-4
         ClassyImageURLGetter
+      .col-xs-12.col-sm-6.col-lg-4
+        PoseNetPointerDatasetMakerCard
 </template>
 
 <script>
 import TensorMonkey from "../components/TensorMonkey.vue";
 import PoseNetPointerCard from "../components/cards/PoseNetPointerCard";
 import ClassyImageURLGetter from "../components/cards/ClassyImageURLGetter";
+import PoseNetPointerDatasetMakerCard from "../components/cards/PoseNetPointerDatasetMakerCard";
 
 export default {
   name: "PageIndex",
-  components: { TensorMonkey, PoseNetPointerCard, ClassyImageURLGetter }
+  components: {
+    TensorMonkey,
+    PoseNetPointerCard,
+    ClassyImageURLGetter,
+    PoseNetPointerDatasetMakerCard
+  }
 };
 </script>
 

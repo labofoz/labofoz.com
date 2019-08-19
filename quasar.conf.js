@@ -37,6 +37,7 @@ module.exports = function(ctx) {
         "QDrawer",
         "QHeader",
         "QIcon",
+        "QInput",
         "QItem",
         "QItemSection",
         "QItemLabel",
