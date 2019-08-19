@@ -59,7 +59,6 @@ export default class {
    */
   startLoop() {
     this.engine.runRenderLoop(() => {
-      this.scene.render();
       Object.keys(this.plugins).forEach(key => {
         this.plugins[key].call(this);
       });

@@ -34,6 +34,8 @@ export default {
 
     posenet: null,
 
+    samples: [],
+
     // Synthetic data
     synthetic: {
       yaw: 0,
@@ -60,8 +62,8 @@ export default {
     async startPosenet() {
       let hasError = false;
       if (this.posenet) {
-        this.isCollecting = true
-        return
+        this.isCollecting = true;
+        return;
       }
 
       // Load posenet and bail if no connection
@@ -86,7 +88,20 @@ export default {
 
       // Use PoseNet
       this.Scene.use("getPose", async () => {
-        if (this.isCollecting) {
+        if (this.isCollecting & (this.samples.length < this.sampleSize)) {
+          // Reposition head
+          this.Scene.head.rotation.x =
+            ((Math.random() * 70 - 35) * Math.PI) / 180;
+          this.Scene.head.rotation.y =
+            ((Math.random() * 70 - 35) * Math.PI) / 180;
+          this.Scene.head.rotation.z =
+            ((Math.random() * 70 - 35) * Math.PI) / 180;
+          this.Scene.head.position.x = Math.random() * -10 + 5;
+          this.Scene.head.position.y = Math.random() * -6 + 3;
+          this.Scene.head.position.z = Math.random() * -20;
+
+          this.Scene.scene.render();
+
           this.pose = await this.posenet.estimateSinglePose(this.$refs.scene);
           this.drawKeypoints();
         }
@@ -97,7 +112,6 @@ export default {
      * Draws the detected keypoints
      */
     drawKeypoints() {
-      this.$inferCtx.fillStyle = "#f0f";
       this.$inferCtx.clearRect(
         0,
         0,
@@ -107,6 +121,24 @@ export default {
       for (let i = 0; i < 5; i++) {
         // @TODO make this configurable
         if (this.pose.keypoints[i].score > 0.7) {
+          switch (i) {
+            case 0:
+              this.$inferCtx.fillStyle = "#f00";
+              break;
+            case 1:
+              this.$inferCtx.fillStyle = "#0f0";
+              break;
+            case 2:
+              this.$inferCtx.fillStyle = "#00f";
+              break;
+            case 3:
+              this.$inferCtx.fillStyle = "#ff0";
+              break;
+            case 4:
+              this.$inferCtx.fillStyle = "#f0f";
+              break;
+          }
+
           this.$inferCtx.beginPath();
           this.$inferCtx.arc(
             this.pose.keypoints[i].position.x,
